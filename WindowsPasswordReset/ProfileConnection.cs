@@ -74,7 +74,7 @@ namespace WindowsPasswordReset
 
         public void ResetUserPassword(string username, string password)
         {
-            logger.Info("Reseting users " + username + " password");
+            logger.Info("Reseting password for user " + username);
             UserPrincipal usr = UserPrincipal.FindByIdentity(context, username);
             if (usr == null)
             {

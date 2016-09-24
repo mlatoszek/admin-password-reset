@@ -41,14 +41,18 @@ namespace WindowsPasswordReset
     {
         public static void AppendText(this RichTextBox box, string text, Brush brush)
         {
-            BrushConverter bc = new BrushConverter();
-            TextRange tr = new TextRange(box.Document.ContentEnd, box.Document.ContentEnd);
-            tr.Text = text;
-            try
+            box.Dispatcher.BeginInvoke(new Action(() =>
             {
-                tr.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
-            }
-            catch (FormatException) { }
+                BrushConverter bc = new BrushConverter();
+                TextRange tr = new TextRange(box.Document.ContentEnd, box.Document.ContentEnd);
+                tr.Text = text;
+                try
+                {
+                    tr.ApplyPropertyValue(TextElement.ForegroundProperty, brush);
+                    box.ScrollToEnd();
+                }
+                catch (FormatException) { }
+            }));            
         }
     }
 

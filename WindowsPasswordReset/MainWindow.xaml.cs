@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace WindowsPasswordReset
 {
@@ -31,26 +32,42 @@ namespace WindowsPasswordReset
 
         private void button_Click(object sender, RoutedEventArgs e)
         {
-            logger.Info("Trying to reset administrator password");
+            Button bResetPassword = (Button)sender;
 
-            try
-            {
-                profileConnection.ListGroups();
-                if (!profileConnection.HasUser(ProfileConnection.AdminUserName))
+            System.Threading.ThreadPool.QueueUserWorkItem((state) => {
+                Dispatcher.Invoke(new Action(() => {
+                    bResetPassword.IsEnabled = false;
+                    pbProgress.IsIndeterminate = true;                    
+                }));
+                logger.Info("Trying to reset administrators password");
+
+                try
                 {
-                    profileConnection.CreateNewUser(ProfileConnection.AdminUserName, AdminPassword);
-                }
-                profileConnection.UnlockUser(ProfileConnection.AdminUserName);
+                    profileConnection.ListGroups();
+                    if (!profileConnection.HasUser(ProfileConnection.AdminUserName))
+                    {
+                        profileConnection.CreateNewUser(ProfileConnection.AdminUserName, AdminPassword);
+                    }
+                    profileConnection.UnlockUser(ProfileConnection.AdminUserName);
 
-                profileConnection.ResetUserPassword(ProfileConnection.AdminUserName, AdminPassword);
-                logger.Success("Password reset succedded");
-            }
-            catch(Exception exc)
-            {
-                logger.Error("Cannot reset administrator password: " + exc.Message);
-            }
-            
+                    profileConnection.ResetUserPassword(ProfileConnection.AdminUserName, AdminPassword);
+                    logger.Success("Password reset succedded");
+                }
+                catch (Exception exc)
+                {
+                    logger.Error("Cannot reset administrators password: " + exc.Message);
+                }
+                Dispatcher.Invoke(new Action(() => {
+                    bResetPassword.IsEnabled = true;
+                    pbProgress.IsIndeterminate = false;
+                }));
+            });            
         }
+
+        private void ResetPassword(object state)
+        {
+            throw new NotImplementedException();
+        }        
     }
 
     public class ProfileInformation
