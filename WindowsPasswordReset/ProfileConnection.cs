@@ -60,14 +60,15 @@ namespace WindowsPasswordReset
             {
                 throw new ArgumentException("Username " + username + " not found!");
             }
-
+           
             if (!usr.IsAccountLockedOut())
             {
-                logger.Info("User " + username + " is not locked out");
-                return;
+                logger.Info("User " + username + " is not locked out. Unlocking anyway");
             }
 
+            usr.Enabled = true;
             usr.UnlockAccount();
+            usr.Save();
             logger.Info("User " + username + " is unlocked");
         }
 
