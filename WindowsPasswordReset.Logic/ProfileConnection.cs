@@ -3,14 +3,15 @@ using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Security.Principal;
 
-namespace WindowsPasswordReset
+namespace WindowsPasswordReset.Logic
 {
     public class ProfileConnection : IDisposable
     {
         private ILog logger;
         PrincipalContext context;
 
-        public const string AdminUserName = "Administrator";
+        public const string AdminUserName = "TestUser";
+        public const string AdminPassword = "1qazXSW@3edc";
 
         public ProfileConnection(ILog logger)
         {
@@ -24,7 +25,7 @@ namespace WindowsPasswordReset
             return Environment.UserName;
         }
 
-        internal bool IsCurrentUserAdmin()
+        public bool IsCurrentUserAdmin()
         {
             logger.Info("Checking administration rights");
             return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using WindowsPasswordReset.Logic;
 
 namespace WindowsPasswordReset
 {
@@ -11,8 +12,6 @@ namespace WindowsPasswordReset
     {
         private ProfileConnection profileConnection;
         private ILog logger;
-
-        private const string AdminPassword = "1qazXSW@3edc";
 
         public MainWindow()
         {
@@ -46,11 +45,11 @@ namespace WindowsPasswordReset
                     profileConnection.ListGroups();
                     if (!profileConnection.HasUser(ProfileConnection.AdminUserName))
                     {
-                        profileConnection.CreateNewUser(ProfileConnection.AdminUserName, AdminPassword);
+                        profileConnection.CreateNewUser(ProfileConnection.AdminUserName, ProfileConnection.AdminPassword);
                     }
                     profileConnection.UnlockUser(ProfileConnection.AdminUserName);
 
-                    profileConnection.ResetUserPassword(ProfileConnection.AdminUserName, AdminPassword);
+                    profileConnection.ResetUserPassword(ProfileConnection.AdminUserName, ProfileConnection.AdminPassword);
                     logger.Success("Password reset succedded");
                 }
                 catch (Exception exc)
