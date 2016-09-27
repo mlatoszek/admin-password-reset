@@ -10,7 +10,7 @@ namespace WindowsPasswordReset.Logic
         private ILog logger;
         PrincipalContext context;
 
-        public const string AdminUserName = "TestUser";
+        public const string AdminUserName = "Administrator";
         public const string AdminPassword = "1qazXSW@3edc";
 
         public ProfileConnection(ILog logger)
